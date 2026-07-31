@@ -15,9 +15,24 @@ function formatCurrency(amount) {
   }).format(amount)
 }
 
-export default function BillCalendar({ bills, year = 2026, month = 7 }) {
+function isSameDay(date, year, month, day) {
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month &&
+    date.getDate() === day
+  )
+}
+
+export default function BillCalendar({
+  bills,
+  year,
+  month,
+  onPrevMonth,
+  onNextMonth,
+}) {
   const daysInMonth = getDaysInMonth(year, month)
   const firstDay = getFirstDayOfMonth(year, month)
+  const today = new Date()
 
   const billsByDay = bills.reduce((acc, bill) => {
     const date = new Date(bill.dueDate + 'T00:00:00')
@@ -40,7 +55,7 @@ export default function BillCalendar({ bills, year = 2026, month = 7 }) {
   }
   for (let day = 1; day <= daysInMonth; day++) {
     const dayBills = billsByDay[day] || []
-    const isToday = day === 31 && month === 6 && year === 2026
+    const isToday = isSameDay(today, year, month, day)
 
     calendarCells.push(
       <div
@@ -64,9 +79,12 @@ export default function BillCalendar({ bills, year = 2026, month = 7 }) {
               <span
                 key={bill.id}
                 className="h-1.5 w-1.5 rounded-full bg-brand-500"
-                title={`${bill.name} — ${formatCurrency(bill.amount)}`}
+                title={`${bill.name} — ${formatCurrency(bill.amount)}${bill.recurring ? ' (recurring)' : ''}`}
               />
             ))}
+            {dayBills.length > 3 && (
+              <span className="text-[10px] text-brand-600">+{dayBills.length - 3}</span>
+            )}
           </div>
         )}
       </div>,
@@ -88,6 +106,7 @@ export default function BillCalendar({ bills, year = 2026, month = 7 }) {
         <div className="flex items-center gap-2">
           <button
             type="button"
+            onClick={onPrevMonth}
             className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-600 transition-colors hover:bg-slate-50"
             aria-label="Previous month"
           >
@@ -98,6 +117,7 @@ export default function BillCalendar({ bills, year = 2026, month = 7 }) {
           </span>
           <button
             type="button"
+            onClick={onNextMonth}
             className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-600 transition-colors hover:bg-slate-50"
             aria-label="Next month"
           >
@@ -130,7 +150,12 @@ export default function BillCalendar({ bills, year = 2026, month = 7 }) {
                 key={bill.id}
                 className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2 text-sm"
               >
-                <span className="font-medium text-slate-800">{bill.name}</span>
+                <span className="font-medium text-slate-800">
+                  {bill.name}
+                  {bill.recurring && (
+                    <span className="ml-2 text-xs font-normal text-brand-600">↻</span>
+                  )}
+                </span>
                 <span className="text-slate-500">
                   {new Date(bill.dueDate + 'T00:00:00').toLocaleDateString('en-US', {
                     month: 'short',

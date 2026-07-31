@@ -1,11 +1,55 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Header from '../components/Header'
 import QuickStats from '../components/QuickStats'
 import BillCalendar from '../components/BillCalendar'
 import UpcomingBills from '../components/UpcomingBills'
+import AddBillModal from '../components/AddBillModal'
 import { mockBills } from '../data/mockBills'
+import { createBillId, expandBillOccurrences } from '../utils/bills'
+
+const today = new Date()
 
 export default function Dashboard() {
+  const [bills, setBills] = useState(
+    mockBills.map((bill) => ({
+      ...bill,
+      recurring: bill.recurring ?? false,
+      accountNumber: bill.accountNumber ?? '',
+    })),
+  )
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [calendarDate, setCalendarDate] = useState({
+    year: today.getFullYear(),
+    month: today.getMonth(),
+  })
+
+  const expandedBills = expandBillOccurrences(bills)
+
+  function handleSaveBill(billData) {
+    setBills((prev) => [
+      ...prev,
+      {
+        id: createBillId(),
+        ...billData,
+      },
+    ])
+  }
+
+  function handlePrevMonth() {
+    setCalendarDate((prev) => {
+      const date = new Date(prev.year, prev.month - 1, 1)
+      return { year: date.getFullYear(), month: date.getMonth() }
+    })
+  }
+
+  function handleNextMonth() {
+    setCalendarDate((prev) => {
+      const date = new Date(prev.year, prev.month + 1, 1)
+      return { year: date.getFullYear(), month: date.getMonth() }
+    })
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Header variant="dashboard" />
@@ -29,17 +73,32 @@ export default function Dashboard() {
           </Link>
         </div>
 
-        <QuickStats bills={mockBills} />
+        <QuickStats bills={expandedBills} calendarDate={calendarDate} />
 
         <div className="mt-8 grid gap-6 lg:grid-cols-5">
           <div className="lg:col-span-3">
-            <BillCalendar bills={mockBills} year={2026} month={7} />
+            <BillCalendar
+              bills={expandedBills}
+              year={calendarDate.year}
+              month={calendarDate.month}
+              onPrevMonth={handlePrevMonth}
+              onNextMonth={handleNextMonth}
+            />
           </div>
           <div className="lg:col-span-2">
-            <UpcomingBills bills={mockBills} />
+            <UpcomingBills
+              bills={expandedBills}
+              onAddBill={() => setIsModalOpen(true)}
+            />
           </div>
         </div>
       </main>
+
+      <AddBillModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSaveBill}
+      />
     </div>
   )
 }

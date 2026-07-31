@@ -10,21 +10,37 @@ function StatCard({ label, value, subtext, accent }) {
   )
 }
 
-export default function QuickStats({ bills }) {
-  const totalDueThisMonth = bills.reduce((sum, b) => sum + b.amount, 0)
-  const dueSoon = bills.filter((b) => {
-    const diff = Math.ceil(
-      (new Date(b.dueDate + 'T00:00:00') - new Date('2026-07-31T00:00:00')) /
-        (1000 * 60 * 60 * 24),
+export default function QuickStats({ bills, calendarDate }) {
+  const monthBills = bills.filter((bill) => {
+    const date = new Date(bill.dueDate + 'T00:00:00')
+    return (
+      date.getFullYear() === calendarDate.year &&
+      date.getMonth() === calendarDate.month
     )
-    return diff >= 0 && diff <= 7
+  })
+
+  const totalDueThisMonth = monthBills.reduce((sum, b) => sum + b.amount, 0)
+
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const weekFromNow = new Date(today)
+  weekFromNow.setDate(weekFromNow.getDate() + 7)
+
+  const dueSoon = bills.filter((b) => {
+    const due = new Date(b.dueDate + 'T00:00:00')
+    return due >= today && due <= weekFromNow
   }).length
+
+  const monthLabel = new Date(calendarDate.year, calendarDate.month).toLocaleString(
+    'en-US',
+    { month: 'long', year: 'numeric' },
+  )
 
   return (
     <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
       <StatCard
         label="Bills This Month"
-        value={bills.length}
+        value={monthBills.length}
         subtext="Active recurring & one-time"
       />
       <StatCard
@@ -33,7 +49,7 @@ export default function QuickStats({ bills }) {
           style: 'currency',
           currency: 'USD',
         }).format(totalDueThisMonth)}
-        subtext="August 2026"
+        subtext={monthLabel}
         accent="text-brand-700"
       />
       <StatCard
