@@ -7,7 +7,7 @@ The goal of MoneyTrack is to eliminate the stress of managing multiple bills by 
 ---
 
 ## Live Demo
-View my project here at: https://ashleycodie.github.io/MoneyTrack/
+View my project here: https://ashleycodie.github.io/MoneyTrack/
 
 ## ✨ Features
 
