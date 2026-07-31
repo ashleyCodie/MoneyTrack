@@ -102,6 +102,11 @@ Store important support information including:
 
 ---
 
+# AI Used
+- Cursor
+
+---
+
 # 📁 Project Structure
 
 ```
