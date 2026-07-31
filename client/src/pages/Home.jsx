@@ -1,11 +1,18 @@
+import { useState } from 'react'
 import Header from '../components/Header'
 import QuickStats from '../components/QuickStats'
 import BillCalendar from '../components/BillCalendar'
 import UpcomingBills from '../components/UpcomingBills'
 import FeatureCard from '../components/FeatureCard'
 import { mockBills, features } from '../data/mockBills'
+import { expandBillOccurrences } from '../utils/bills'
 
 export default function Home() {
+  const bills = expandBillOccurrences(
+    mockBills.map((bill) => ({ ...bill, recurring: false, accountNumber: '' })),
+  )
+  const [calendarDate, setCalendarDate] = useState({ year: 2026, month: 7 })
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Header />
@@ -47,14 +54,30 @@ export default function Home() {
 
         {/* Dashboard preview */}
         <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-          <QuickStats bills={mockBills} />
+          <QuickStats bills={bills} calendarDate={calendarDate} />
 
           <div className="mt-8 grid gap-6 lg:grid-cols-5">
             <div className="lg:col-span-3">
-              <BillCalendar bills={mockBills} year={2026} month={7} />
+              <BillCalendar
+                bills={bills}
+                year={calendarDate.year}
+                month={calendarDate.month}
+                onPrevMonth={() =>
+                  setCalendarDate((prev) => {
+                    const date = new Date(prev.year, prev.month - 1, 1)
+                    return { year: date.getFullYear(), month: date.getMonth() }
+                  })
+                }
+                onNextMonth={() =>
+                  setCalendarDate((prev) => {
+                    const date = new Date(prev.year, prev.month + 1, 1)
+                    return { year: date.getFullYear(), month: date.getMonth() }
+                  })
+                }
+              />
             </div>
             <div className="lg:col-span-2">
-              <UpcomingBills bills={mockBills} />
+              <UpcomingBills bills={bills} />
             </div>
           </div>
         </section>

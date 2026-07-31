@@ -6,7 +6,8 @@ function formatCurrency(amount) {
 }
 
 function daysUntil(dateStr) {
-  const today = new Date('2026-07-31T00:00:00')
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
   const due = new Date(dateStr + 'T00:00:00')
   const diff = Math.ceil((due - today) / (1000 * 60 * 60 * 24))
   if (diff === 0) return 'Due today'
@@ -23,8 +24,12 @@ const categoryColors = {
   Entertainment: 'bg-teal-100 text-teal-700',
 }
 
-export default function UpcomingBills({ bills }) {
+export default function UpcomingBills({ bills, onAddBill }) {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
   const sorted = [...bills]
+    .filter((bill) => new Date(bill.dueDate + 'T00:00:00') >= today)
     .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
     .slice(0, 5)
 
@@ -56,6 +61,11 @@ export default function UpcomingBills({ bills }) {
               <div className="min-w-0 flex-1">
                 <p className="truncate font-medium text-slate-900">{bill.name}</p>
                 <div className="mt-0.5 flex flex-wrap items-center gap-2">
+                  {bill.recurring && (
+                    <span className="inline-flex rounded-full bg-brand-100 px-2 py-0.5 text-xs font-medium text-brand-700">
+                      Recurring
+                    </span>
+                  )}
                   <span
                     className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
                       categoryColors[bill.category] || 'bg-slate-100 text-slate-600'
@@ -80,6 +90,7 @@ export default function UpcomingBills({ bills }) {
 
       <button
         type="button"
+        onClick={() => onAddBill?.()}
         className="mt-5 w-full rounded-lg border border-dashed border-slate-300 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700"
       >
         + Add a bill
