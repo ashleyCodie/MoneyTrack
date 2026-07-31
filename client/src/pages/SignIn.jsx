@@ -124,12 +124,9 @@ export default function SignIn() {
 
             <p className="mt-6 text-center text-sm text-slate-500">
               Don&apos;t have an account?{' '}
-              <button
-                type="button"
-                className="font-medium text-brand-600 hover:text-brand-700"
-              >
+              <Link to="/sign-up" className="font-medium text-brand-600 hover:text-brand-700">
                 Create one
-              </button>
+              </Link>
             </p>
           </div>
         </div>
