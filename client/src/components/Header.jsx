@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 
-const navLinks = [
+const publicNavLinks = [
   { label: 'Dashboard', to: '/dashboard' },
   { label: 'Ledger', to: '/#ledger' },
   { label: 'Bills', to: '/#bills' },
@@ -8,9 +8,24 @@ const navLinks = [
   { label: 'Support', to: '/#support' },
 ]
 
+const authenticatedNavLinks = [
+  { label: 'Dashboard', to: '/dashboard' },
+  { label: 'Ledger', to: '/ledger' },
+  { label: 'Bills', to: '/dashboard' },
+  { label: 'Accounts', to: '/dashboard' },
+  { label: 'Support', to: '/dashboard' },
+]
+
+function isLinkActive(label, pathname) {
+  if (label === 'Dashboard') return pathname === '/dashboard'
+  if (label === 'Ledger') return pathname === '/ledger'
+  return false
+}
+
 export default function Header({ variant = 'home' }) {
   const location = useLocation()
-  const isDashboard = variant === 'dashboard'
+  const isAuthenticated = variant === 'dashboard'
+  const navLinks = isAuthenticated ? authenticatedNavLinks : publicNavLinks
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur-md">
@@ -26,8 +41,7 @@ export default function Header({ variant = 'home' }) {
 
         <nav className="hidden items-center gap-1 md:flex">
           {navLinks.map((link) => {
-            const isActive =
-              link.label === 'Dashboard' && location.pathname === '/dashboard'
+            const isActive = isLinkActive(link.label, location.pathname)
 
             return (
               <Link
@@ -46,7 +60,7 @@ export default function Header({ variant = 'home' }) {
         </nav>
 
         <div className="flex items-center gap-2">
-          {!isDashboard && (
+          {!isAuthenticated && (
             <>
               <Link
                 to="/sign-in"
