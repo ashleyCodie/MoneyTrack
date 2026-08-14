@@ -1,3 +1,5 @@
+# [View my project here ++**https://ashleycodie.github.io/MoneyTrack/](your-github-pages-link)**++
+
 # 💰 MoneyTrack
 
 MoneyTrack is a personal finance management application that helps users organize their finances in one secure location. Users can track bills, manage recurring payments, maintain a payment ledger, securely store account information, and keep customer service contact details for all of their accounts.
@@ -12,6 +14,7 @@ View my project here: https://ashleycodie.github.io/MoneyTrack/
 ## ✨ Features
 
 ### 🏠 Home Page
+
 - Modern responsive landing page
 - Hero section introducing the application
 - Quick statistics overview
@@ -22,6 +25,7 @@ View my project here: https://ashleycodie.github.io/MoneyTrack/
 - Customer Service preview
 
 ### 🔐 Authentication
+
 - User Sign In page
 - User Sign Up page
 - Placeholder authentication flow
@@ -29,6 +33,7 @@ View my project here: https://ashleycodie.github.io/MoneyTrack/
 - Sign Out functionality
 
 ### 📊 Dashboard
+
 - Personal financial overview
 - Bill statistics
 - Monthly calendar
@@ -36,6 +41,7 @@ View my project here: https://ashleycodie.github.io/MoneyTrack/
 - Quick access to financial tools
 
 ### 💳 Bill Management
+
 Users can:
 
 - Add new bills
@@ -50,6 +56,7 @@ Users can:
 Recurring bills automatically generate future monthly calendar entries.
 
 ### 📅 Bill Calendar
+
 - Monthly calendar view
 - Displays bill due dates
 - Visual indicators for bills due
@@ -57,6 +64,7 @@ Recurring bills automatically generate future monthly calendar entries.
 - Supports recurring payments
 
 ### 📖 Payment Ledger
+
 The Ledger page displays all bill payments made during the previous year.
 
 Each payment includes:
@@ -69,6 +77,7 @@ Each payment includes:
 The ledger is displayed in an organized grid for quick reference.
 
 ### 🔒 Account Vault
+
 Securely store account information including:
 
 - Account numbers
@@ -77,6 +86,7 @@ Securely store account information including:
 - Login information
 
 ### 📞 Customer Service Directory
+
 Store important support information including:
 
 - Customer Service phone numbers
@@ -281,4 +291,3 @@ This project is licensed under the MIT License.
 **Ashley Brooks**
 
 Full Stack Developer
-
